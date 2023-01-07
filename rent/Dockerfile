@@ -1,4 +1,9 @@
-FROM maven:3.8.1-jdk-11
+FROM maven:3 AS build
+WORKDIR /code
+COPY . /code/
+RUN mvn install
+
+FROM openjdk:17-jdk-slim-buster
 
 WORKDIR /app
 COPY . .

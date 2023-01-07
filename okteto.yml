@@ -5,11 +5,6 @@ build:
     context: catalog
   rent:
     context: rent
-  api:
-    context: api
-  api-dev:
-    context: api
-    target: dev
 
 deploy:
   - name: Deploy PostgreSQL
@@ -22,8 +17,6 @@ deploy:
     command: helm upgrade --install catalog catalog/chart --set image=${OKTETO_BUILD_CATALOG_IMAGE}
   - name: Deploy Rent
     command: helm upgrade --install rent rent/chart --set image=${OKTETO_BUILD_RENT_IMAGE}
-  - name: Deploy API
-    command: helm upgrade --install api api/chart --set image=${OKTETO_BUILD_API_IMAGE} --set load=${API_LOAD_DATA:-true}
 
 dev:
   catalog:
@@ -40,14 +33,3 @@ dev:
       - /root/.m2
     forward:
       - 5005:5005
-  api:
-    image: ${OKTETO_BUILD_API_DEV_IMAGE}
-    command: bash
-    securityContext:
-      capabilities:
-        add:
-        - SYS_PTRACE
-    sync:
-      - api:/usr/src/app
-    forward:
-      - 2346:2345

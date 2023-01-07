@@ -1,11 +1,6 @@
 icon: https://apps.okteto.com/movies/icon.png
 
 build:
-  frontend:
-    context: frontend
-  frontend-dev:
-    context: frontend
-    target: dev
   catalog:
     context: catalog
   rent:
@@ -40,8 +35,6 @@ deploy:
     command:  helm upgrade --install kafka kafka/kafka-18.0.3.tgz -f kafka/values.yml --version 18.0.3
   - name: Deploy MongoDB
     command:  helm upgrade --install mongodb mongodb/mongodb-12.1.30.tgz -f mongodb/values.yml --version 12.1.30
-  - name: Deploy Frontend
-    command: helm upgrade --install frontend frontend/chart --set image=${OKTETO_BUILD_FRONTEND_IMAGE}
   - name: Deploy Catalog
     command: helm upgrade --install catalog catalog/chart --set image=${OKTETO_BUILD_CATALOG_IMAGE}
   - name: Deploy Rent
@@ -52,11 +45,6 @@ deploy:
     command: helm upgrade --install api api/chart --set image=${OKTETO_BUILD_API_IMAGE} --set load=${API_LOAD_DATA:-true}
 
 dev:
-  frontend:
-    image: ${OKTETO_BUILD_FRONTEND_DEV_IMAGE}
-    command: bash
-    sync:
-      - frontend:/usr/src/app
   catalog:
     command: yarn start
     sync:
